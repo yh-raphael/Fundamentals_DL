@@ -79,12 +79,12 @@ class KNearestNeighbor(object):
         dists[i,j] = np.sqrt(np.sum((X[i,:]-self.X_train[j,:])**2))
         
         # 문제 1: 위 구문(line: 78)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
-        print ("--dists: ", dists[i,j])
+        print ("-- dists: ", dists[i,j])
         sum_val = 0.0
         for k in range (len (X[i,:])):
           sum_val = sum_val + (X[i, k] - self.X_train[j, k]) ** 2
-        sqrt_val = sum_val ** (0.5)
-        print ("==sqrt_val: ", sqrt_val)
+        dists[i,j] = sum_val ** (0.5)
+        print ("== my: ", dists[i,j])
         #####################################################################
         #                       END OF YOUR CODE                            #
         #####################################################################
@@ -112,7 +112,15 @@ class KNearestNeighbor(object):
 
       # 문제 2: 위 구문(line: 105)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
       # (list to np array, tuple to np array 변환 함수(np.array())는 사용 가능)
-    
+      print ("==dists[i,: ]: ", dists[i,:])
+      a = list ()
+      for j in range (num_train):         # iter: 5,000
+        sum = 0.0
+        for k in range (len (X[i,:])):    # iter: 3,072
+          sum = sum + ( ((X[i,k]) - self.X_train[j,k]) ** 2 )
+        a.append (sum ** (0.5))
+      dists[i,:] = np.array (a)
+      print ("==my: ", dists[i,:])
       #######################################################################
       #                         END OF YOUR CODE                            #
       #######################################################################
