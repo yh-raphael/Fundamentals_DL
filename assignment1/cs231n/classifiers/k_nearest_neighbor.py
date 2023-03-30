@@ -62,6 +62,7 @@ class KNearestNeighbor(object):
       is the Euclidean distance between the ith test point and the jth training
       point.
     """
+    
     num_test = X.shape[0]
     num_train = self.X_train.shape[0]
     dists = np.zeros((num_test, num_train))
@@ -78,7 +79,12 @@ class KNearestNeighbor(object):
         dists[i,j] = np.sqrt(np.sum((X[i,:]-self.X_train[j,:])**2))
         
         # 문제 1: 위 구문(line: 78)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
-
+        print ("--dists: ", dists[i,j])
+        sum_val = 0.0
+        for k in range (len (X[i,:])):
+          sum_val = sum_val + (X[i, k] - self.X_train[j, k]) ** 2
+        sqrt_val = sum_val ** (0.5)
+        print ("==sqrt_val: ", sqrt_val)
         #####################################################################
         #                       END OF YOUR CODE                            #
         #####################################################################
