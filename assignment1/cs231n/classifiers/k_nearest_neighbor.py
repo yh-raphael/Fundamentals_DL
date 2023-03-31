@@ -79,12 +79,12 @@ class KNearestNeighbor(object):
         dists[i,j] = np.sqrt(np.sum((X[i,:]-self.X_train[j,:])**2))
         
         # 문제 1: 위 구문(line: 78)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
-        print ("-- dists: ", dists[i,j])
-        sum_val = 0.0
-        for k in range (len (X[i,:])):
-          sum_val = sum_val + (X[i, k] - self.X_train[j, k]) ** 2
-        dists[i,j] = sum_val ** (0.5)
-        print ("== my: ", dists[i,j])
+        # print ("-- dists: ", dists[i,j])
+        # sum_val = 0.0
+        # for k in range (len (X[i,:])):
+        #   sum_val = sum_val + (X[i, k] - self.X_train[j, k]) ** 2
+        # dists[i,j] = sum_val ** (0.5)
+        # print ("== my: ", dists[i,j])
         #####################################################################
         #                       END OF YOUR CODE                            #
         #####################################################################
@@ -225,8 +225,12 @@ class KNearestNeighbor(object):
       test_row = dists[i,:]
       sorted_row = np.argsort(test_row)
       # 문제 4-1: 위 구문(line: 181)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
+      my_test_row_list = test_row.tolist ()
+      my_sorted_row_lsit = sorted (range (len (my_test_row_list)), key = lambda i : my_test_row_list[i])
+      sorted_row = np.array (my_sorted_row_lsit)
+      
       closest_y = self.y_train[sorted_row[0:k]]
-
+      
       #########################################################################
       # TODO:                                                                 #
       # Now that you have found the labels of the k nearest neighbors, you    #
@@ -234,12 +238,28 @@ class KNearestNeighbor(object):
       # Store this label in y_pred[i]. Break ties by choosing the smaller     #
       # label.                                                                #
       #########################################################################
-
+      
       y_pred[i] = np.argmax(np.bincount(closest_y))
         
       # 문제 4-2: 위 구문(line:193)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
       # (list to np array, tuple to np array 변환 함수(np.array())는 사용 가능)
-
+      print (closest_y)
+      print (np.bincount(closest_y))
+      print (y_pred[i])
+      
+      a = np.zeros ((10))
+      for i in range (len (closest_y)):
+        a[closest_y[i]] = a[closest_y[i]] + 1
+      print (a)
+      max_tmp = 0
+      max_idx = -1
+      for i in range (10):
+        if max_tmp < a[i]:
+          max_tmp = a[i]
+          max_idx = i
+      y_pred[i] = max_idx
+      print (y_pred[i])
+      print ()
       #########################################################################
       #                           END OF YOUR CODE                            # 
       #########################################################################
