@@ -157,8 +157,39 @@ class KNearestNeighbor(object):
     
     # 문제 3: 위 구문(line: 139~142)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
     # (list to np array, tuple to np array 변환 함수(np.array())는 사용 가능)
+    b = list ()
+    for i in range (num_test):
+      sum = 0.0
+      for k in range (len (X[i,:])):
+        sum += X[i,k] ** 2
+      a = list ()
+      a.append (sum)
+      b.append (a)
+    x_sq = np.array (b)
     
-
+    b = list ()
+    for j in range (num_train):
+      sum = 0.0
+      for k in range (len (self.X_train[j,:])):
+        sum += self.X_train[j,k] ** 2
+      b.append (sum)
+    y_sq = np.array (b)
+    
+    b = list ()
+    for i in range (num_test):          # iter: 500
+      a = list ()
+      for j in range (num_train):       # iter: 5,000
+        sum = 0.0
+        for k in range (len (X[i,:])):  # iter: 3,072
+          sum += X[i,k] * self.X_train[j,k]
+        a.append (sum)
+      b.append (a)
+    my_xy = np.array (b)
+    
+    c = x_sq + y_sq - 2 * my_xy
+    for i in range (num_test):
+      for j in range (num_train):
+        dists[i,j] = c[i,j] ** (0.5)
     #########################################################################
     #                         END OF YOUR CODE                              #
     #########################################################################
