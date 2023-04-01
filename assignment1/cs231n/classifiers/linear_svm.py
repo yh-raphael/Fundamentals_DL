@@ -126,8 +126,14 @@ def svm_loss_vectorized(W, X, y, reg):
   sum_margin = pos_margin_mask.sum(1) - 1
   pos_margin_mask[range(pos_margin_mask.shape[0]), y] = -sum_margin
 
-  dW = np.dot(X.T, pos_margin_mask)
+  #dW = np.dot(X.T, pos_margin_mask)
   # 문제 5-3: 위 구문(line: 120)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
+  dW = np.zeros ([X.T.shape[0], pos_margin_mask.shape[1]])
+  for i in range (X.T.shape[0]):
+    for j in range (pos_margin_mask.shape[1]):
+      for k in range (X.T.shape[1]):
+        dW[i,j] += X.T[i,k] * pos_margin_mask[k,j]
+
   dW = dW / num_train + 2 * reg * W
 
   #############################################################################
