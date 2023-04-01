@@ -96,8 +96,14 @@ def svm_loss_vectorized(W, X, y, reg):
 
   margin[margin < 0] = 0
 
-  loss = np.sum(margin) / num_train
+  # loss = np.sum(margin) / num_train
   # 문제 5-2: 위 구문(line: 96)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
+  tmp = 0.0
+  for i in range (margin.shape[0]):
+    for j in range (margin.shape[1]):
+      tmp = tmp + margin[i][j]
+  loss = tmp / float(num_train)
+
   loss += reg * np.sum(W * W)
 
   #############################################################################
