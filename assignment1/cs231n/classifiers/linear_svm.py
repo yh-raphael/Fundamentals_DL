@@ -82,8 +82,11 @@ def svm_loss_vectorized(W, X, y, reg):
 
   scores = np.dot(X, W)
 
-  correct_class_scores = np.choose(y, scores.T)  # np.choose uses y to select elements from scores.T
+  # correct_class_scores = np.choose(y, scores.T)  # np.choose uses y to select elements from scores.T
   # 문제 5-1: 위 구문(line: 85)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
+  correct_class_scores = np.zeros (len (y))
+  for i in range (len (y)):
+    correct_class_scores[i] = scores.T[y[i]][i]
 
   mask = np.ones(scores.shape, dtype=bool)
   mask[range(scores.shape[0]), y] = False
