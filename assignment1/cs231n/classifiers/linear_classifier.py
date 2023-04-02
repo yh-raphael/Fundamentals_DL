@@ -57,8 +57,11 @@ class LinearClassifier(object):
       # replacement is faster than sampling without replacement.              #
       #########################################################################
 
-      batch_indices = np.random.choice(X_indices,batch_size)
+      #batch_indices = np.random.choice(X_indices,batch_size)
       # 문제 8: 위 구문(line: 60)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
+      import random
+      batch_indices = random.choices(X_indices, k=batch_size)
+      batch_indices = np.array (batch_indices)
 
       X_batch = X[batch_indices]
       y_batch = y[batch_indices]
