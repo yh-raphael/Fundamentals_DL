@@ -82,7 +82,7 @@ def svm_loss_vectorized(W, X, y, reg):
 
   scores = np.dot(X, W)
 
-  # correct_class_scores = np.choose(y, scores.T)  # np.choose uses y to select elements from scores.T
+  #correct_class_scores = np.choose(y, scores.T)  # np.choose uses y to select elements from scores.T
   # 문제 5-1: 위 구문(line: 85)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
   correct_class_scores = np.zeros (len (y))
   for i in range (len (y)):
@@ -96,7 +96,7 @@ def svm_loss_vectorized(W, X, y, reg):
 
   margin[margin < 0] = 0
 
-  # loss = np.sum(margin) / num_train
+  #loss = np.sum(margin) / num_train
   # 문제 5-2: 위 구문(line: 96)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
   tmp = 0.0
   for i in range (margin.shape[0]):

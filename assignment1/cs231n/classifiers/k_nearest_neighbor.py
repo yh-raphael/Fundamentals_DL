@@ -76,15 +76,14 @@ class KNearestNeighbor(object):
         #####################################################################
 
         # L2 distance with numpy
-        dists[i,j] = np.sqrt(np.sum((X[i,:]-self.X_train[j,:])**2))
+        #dists[i,j] = np.sqrt(np.sum((X[i,:]-self.X_train[j,:])**2))
         
         # 문제 1: 위 구문(line: 78)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
-        # print ("-- dists: ", dists[i,j])
-        # sum_val = 0.0
-        # for k in range (len (X[i,:])):
-        #   sum_val = sum_val + (X[i, k] - self.X_train[j, k]) ** 2
-        # dists[i,j] = sum_val ** (0.5)
-        # print ("== my: ", dists[i,j])
+        sum_val = 0.0
+        for k in range (len (X[i,:])):
+          sum_val = sum_val + (X[i, k] - self.X_train[j, k]) ** 2
+        dists[i,j] = sum_val ** (0.5)
+        
         #####################################################################
         #                       END OF YOUR CODE                            #
         #####################################################################
@@ -108,11 +107,10 @@ class KNearestNeighbor(object):
       #######################################################################
 
       # L2 distance with numpy
-      dists[i,:] = np.sqrt(np.sum((X[i,:] - self.X_train)**2, axis = 1))
+      #dists[i,:] = np.sqrt(np.sum((X[i,:] - self.X_train)**2, axis = 1))
 
       # 문제 2: 위 구문(line: 105)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
-      # (list to np array, tuple to np array 변환 함수(np.array())는 사용 가능)
-      print ("==dists[i,: ]: ", dists[i,:])
+      # (list to np array, tuple to np array 변환 함수(np.array())는 사용 가능)      
       a = list ()
       for j in range (num_train):         # iter: 5,000
         sum = 0.0
@@ -120,7 +118,7 @@ class KNearestNeighbor(object):
           sum = sum + ( ((X[i,k]) - self.X_train[j,k]) ** 2 )
         a.append (sum ** (0.5))
       dists[i,:] = np.array (a)
-      print ("==my: ", dists[i,:])
+      
       #######################################################################
       #                         END OF YOUR CODE                            #
       #######################################################################
@@ -150,10 +148,10 @@ class KNearestNeighbor(object):
     #########################################################################
 
     # L2 distance vectorized with numpy
-    X_squared = np.sum(X**2,axis=1)
-    Y_squared = np.sum(self.X_train**2,axis=1)
-    XY = np.dot(X, self.X_train.T)
-    dists = np.sqrt(X_squared[:,np.newaxis] + Y_squared -2*XY)
+    #X_squared = np.sum(X**2,axis=1)
+    #Y_squared = np.sum(self.X_train**2,axis=1)
+    #XY = np.dot(X, self.X_train.T)
+    #dists = np.sqrt(X_squared[:,np.newaxis] + Y_squared -2*XY)
     
     # 문제 3: 위 구문(line: 139~142)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
     # (list to np array, tuple to np array 변환 함수(np.array())는 사용 가능)
@@ -165,7 +163,7 @@ class KNearestNeighbor(object):
       a = list ()
       a.append (sum)
       b.append (a)
-    x_sq = np.array (b)
+    X_squared = np.array (b)
     
     b = list ()
     for j in range (num_train):
@@ -173,7 +171,7 @@ class KNearestNeighbor(object):
       for k in range (len (self.X_train[j,:])):
         sum += self.X_train[j,k] ** 2
       b.append (sum)
-    y_sq = np.array (b)
+    Y_squared = np.array (b)
     
     b = list ()
     for i in range (num_test):          # iter: 500
@@ -184,12 +182,13 @@ class KNearestNeighbor(object):
           sum += X[i,k] * self.X_train[j,k]
         a.append (sum)
       b.append (a)
-    my_xy = np.array (b)
+    XY = np.array (b)
     
-    c = x_sq + y_sq - 2 * my_xy
+    dists = X_squared + Y_squared - 2 * XY
     for i in range (num_test):
       for j in range (num_train):
-        dists[i,j] = c[i,j] ** (0.5)
+        dists[i,j] = dists[i,j] ** (0.5)
+
     #########################################################################
     #                         END OF YOUR CODE                              #
     #########################################################################
@@ -253,6 +252,7 @@ class KNearestNeighbor(object):
           max_tmp = a[j]
           max_idx = j
       y_pred[i] = max_idx
+
       #########################################################################
       #                           END OF YOUR CODE                            # 
       #########################################################################

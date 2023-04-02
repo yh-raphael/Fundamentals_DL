@@ -111,9 +111,23 @@ class LinearClassifier(object):
     # Implement this method. Store the predicted labels in y_pred.            #
     ###########################################################################
 
-    pred_scores = np.dot(X,self.W)
-    y_pred = np.argmax(pred_scores, axis=1)
+    #pred_scores = np.dot(X,self.W)
+    #y_pred = np.argmax(pred_scores, axis=1)
     # 문제 9: 위 구문(line:111, 112)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
+    pred_scores = np.zeros ([X.shape[0], self.W.shape[1]])
+    for i in range (X.shape[0]):
+      for j in range (self.W.shape[1]):
+        for k in range (X.shape[1]):
+          pred_scores[i,j] += X[i,k] * self.W[k,j]
+    y_pred = np.zeros ([pred_scores.shape[0]], dtype=int)
+    for l in range (pred_scores.shape[0]):
+      max_val = -2
+      max_idx = 0
+      for m in range (pred_scores.shape[1]):
+        if max_val < pred_scores[l][m]:
+          max_val = pred_scores[l][m]
+          max_idx = m
+      y_pred[l] = max_idx
 
     ###########################################################################
     #                           END OF YOUR CODE                              #

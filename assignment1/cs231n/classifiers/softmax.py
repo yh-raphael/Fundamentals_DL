@@ -33,13 +33,13 @@ def softmax_loss_naive(W, X, y, reg):
   num_classes = W.shape[1]
   num_train = X.shape[0]
 
-  scores = np.dot(X, W)
+  #scores = np.dot(X, W)
   # 문제 6-1: 위 구문(line:36)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
-  # scores = np.zeros ([X.shape[0], W.shape[1]])
-  # for i in range (X.shape[0]):
-  #   for j in range (W.shape[1]):
-  #     for k in range (X.shape[1]):
-  #       scores[i,j] = scores[i,j] + X[i,k] * W[k,j]
+  scores = np.zeros ([X.shape[0], W.shape[1]])
+  for i in range (X.shape[0]):
+    for j in range (W.shape[1]):
+      for k in range (X.shape[1]):
+        scores[i,j] = scores[i,j] + X[i,k] * W[k,j]
 
   for ii in range(num_train):
     current_scores = scores[ii, :]
