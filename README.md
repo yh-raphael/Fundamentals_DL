@@ -1,3 +1,7 @@
+# Assignment 1
+  
+KNN, SVM, Softmax  
+
 ## Troubleshooting Log
 
 ### 'data_utils.py' 파일의 line 6 "from scipy.misc import imread" 에서 scipy 가 없다고 에러 발생.
