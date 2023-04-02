@@ -112,11 +112,24 @@ def softmax_loss_vectorized(W, X, y, reg):
   num_train = X.shape[0]
 
   scores = np.dot(X, W)
-  shift_scores = scores - np.max(scores, axis=1)[...,np.newaxis]
+  #shift_scores = scores - np.max(scores, axis=1)[...,np.newaxis]
   # 문제 7-1: 위 구문(line: 96)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
+  tmp = np.zeros ([scores.shape[0],1])
+  for i in range (scores.shape[0]):
+    max_val = 0
+    for j in range (scores.shape[1]):
+      if max_val < scores[i,j]:
+        max_val = scores[i,j]
+    tmp[i,0] = max_val
+  shift_scores = scores - tmp
 
-  softmax_scores = np.exp(shift_scores)/ np.sum(np.exp(shift_scores), axis=1)[..., np.newaxis]
+  #softmax_scores = np.exp(shift_scores)/ np.sum(np.exp(shift_scores), axis=1)[..., np.newaxis]
   # 문제 7-2: 위 구문(line: 99)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
+  tmp = np.zeros ([shift_scores.shape[0], 1])
+  for i in range (shift_scores.shape[0]):
+    for j in range (shift_scores.shape[1]):
+      tmp[i,0] += np.exp (shift_scores[i,j])
+  softmax_scores = np.exp(shift_scores) / tmp  
 
   dScore = softmax_scores
   dScore[range(num_train),y] = dScore[range(num_train),y] - 1
@@ -126,14 +139,30 @@ def softmax_loss_vectorized(W, X, y, reg):
   dW += 2*reg*W
 
   correct_class_scores = np.choose(y, shift_scores.T)  # Size N vector
-  loss = -correct_class_scores + np.log(np.sum(np.exp(shift_scores), axis=1))
-  loss = np.sum(loss)
+  #loss = -correct_class_scores + np.log(np.sum(np.exp(shift_scores), axis=1))
+  #loss = np.sum(loss)
   # 문제 7-3: 위 구문(line: 110, 111)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
+  tmp2 = np.zeros ([shift_scores.shape[0]])
+  for i in range (shift_scores.shape[0]):
+    t_sum = 0.0
+    for j in range (shift_scores.shape[1]):
+      t_sum += np.exp (shift_scores[i,j])
+    tmp2[i] = np.log (t_sum)
+  tmp3 = -correct_class_scores + tmp2
+  loss = 0.0
+  for k in range (tmp3.shape[0]):
+    loss += tmp3[k]
+  
 
-
-  loss /= num_train
-  loss += reg * np.sum(W*W)
+  #loss /= num_train
+  #loss += reg * np.sum(W*W)
   # 문제 7-4: 위 구문(line: 110, 111)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
+  loss /= num_train
+  tmp4 = 0.0
+  for m in range (W.shape[0]):
+    for n in range (W.shape[1]):
+      tmp4 += W[m,n] * W[m,n]
+  loss += reg * tmp4
 
   #############################################################################
   #                          END OF YOUR CODE                                 #
