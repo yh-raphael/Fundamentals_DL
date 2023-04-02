@@ -33,22 +33,36 @@ def softmax_loss_naive(W, X, y, reg):
   num_classes = W.shape[1]
   num_train = X.shape[0]
 
-  scores = np.dot(X, W)
+  #scores = np.dot(X, W)
   # 문제 6-1: 위 구문(line:36)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
+  scores = np.zeros ([X.shape[0], W.shape[1]])
+  for i in range (X.shape[0]):
+    for j in range (W.shape[1]):
+      for k in range (X.shape[1]):
+        scores[i,j] = scores[i,j] + X[i,k] * W[k,j]
 
   for ii in range(num_train):
     current_scores = scores[ii, :]
 
     shift_scores = current_scores - np.max(current_scores)
 
-    loss_ii = -shift_scores[y[ii]] + np.log(np.sum(np.exp(shift_scores)))
+    #loss_ii = -shift_scores[y[ii]] + np.log(np.sum(np.exp(shift_scores)))
     # 문제 6-2: 위 구문(line:43)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
+    tmp = 0.0
+    for k in range (shift_scores.shape[0]):
+      tmp = tmp + np.exp (shift_scores[k])
+    tmp = np.log (tmp)
+    loss_ii = -shift_scores[y[ii]] + tmp
 
     loss += loss_ii
 
     for jj in range(num_classes):
-      softmax_score = np.exp(shift_scores[jj]) / np.sum(np.exp(shift_scores))
+      #softmax_score = np.exp(shift_scores[jj]) / np.sum(np.exp(shift_scores))
       # 문제 6-3: 위 구문(line:43)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
+      tmp2 = 0.0
+      for l in range (shift_scores.shape[0]):
+        tmp2 = tmp2 + np.exp (shift_scores[l])
+      softmax_score = np.exp (shift_scores[jj]) / tmp2
 
       if jj == y[ii]:
         dW[:, jj] += (-1 + softmax_score) * X[ii]
@@ -56,8 +70,13 @@ def softmax_loss_naive(W, X, y, reg):
         dW[:, jj] += softmax_score * X[ii]
 
   loss /= num_train
-  loss += reg * np.sum(W*W)
+  #loss += reg * np.sum(W*W)
   # 문제 6-4: 위 구문(line:43)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
+  tmp3 = 0.0
+  for m in range (W.shape[0]):
+    for n in range (W.shape[1]):
+      tmp3 = tmp3 + W[m,n] * W[m,n]
+  loss += reg * tmp3
 
 
   dW /= num_train
