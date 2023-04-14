@@ -85,8 +85,14 @@ class TwoLayerNet(object):
     relu_1_activation[relu_1_activation < 0] = 0
 
     # FC2 layer.
-    fc2_activation = np.dot(relu_1_activation, W2) + b2
+    #fc2_activation = np.dot(relu_1_activation, W2) + b2
     # 문제 1-1: 위 구문(line: 88)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
+    fc2_activation = np.zeros ([relu_1_activation.shape[0], W2.shape[1]])
+    for i in range (relu_1_activation.shape[0]):
+      for j in range (W2.shape[1]):
+        for k in range (relu_1_activation.shape[1]):
+          fc2_activation[i,j] += relu_1_activation[i,k] * W2[k,j]
+        fc2_activation[i,j] += b2[j]
 
 
     # Output scores.
@@ -117,9 +123,23 @@ class TwoLayerNet(object):
     loss = -correct_class_scores + np.log(np.sum(np.exp(shift_scores), axis=1))
     loss = np.sum(loss)
 
-    loss /= N
-    loss += reg * (np.sum(W1*W1) + np.sum(W2*W2) + np.sum(b1*b1) + np.sum(b2*b2))
+    #loss /= N
+    #loss += reg * (np.sum(W1*W1) + np.sum(W2*W2) + np.sum(b1*b1) + np.sum(b2*b2))
     # 문제 2: 위 구문(line: 117, 118, 121)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
+    loss /= N
+    tmp = 0
+    for i in range (W1.shape[0]):
+      for j in range (W1.shape[1]):
+        tmp += W1[i,j] * W1[i,j]
+    for i in range (W2.shape[0]):
+      for j in range (W2.shape[1]):
+        tmp += W2[i,j] * W2[i,j]
+    for i in range (b1.shape[0]):
+      tmp += b1[i] * b1[i]
+    for i in range (b2.shape[0]):
+      tmp += b2[i] * b2[i]
+    loss += reg * tmp
+
 
     #############################################################################
     #                              END OF YOUR CODE                             #
