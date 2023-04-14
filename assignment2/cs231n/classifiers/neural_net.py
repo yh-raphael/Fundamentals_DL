@@ -120,12 +120,22 @@ class TwoLayerNet(object):
     softmax_scores = np.exp(shift_scores) / np.sum(np.exp(shift_scores), axis=1)[..., np.newaxis]
 
     correct_class_scores = np.choose(y, shift_scores.T) # Size N vector
-    loss = -correct_class_scores + np.log(np.sum(np.exp(shift_scores), axis=1))
-    loss = np.sum(loss)
+    #loss = -correct_class_scores + np.log(np.sum(np.exp(shift_scores), axis=1))
+    #loss = np.sum(loss)
 
     #loss /= N
     #loss += reg * (np.sum(W1*W1) + np.sum(W2*W2) + np.sum(b1*b1) + np.sum(b2*b2))
     # 문제 2: 위 구문(line: 117, 118, 121)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
+    
+    temp = np.zeros ([shift_scores.shape[0]])
+    for i in range (shift_scores.shape[0]):
+      for j in range (shift_scores.shape[1]):
+        temp[i] += np.exp(shift_scores)[i,j]
+    temp2 = -correct_class_scores + np.log (temp)
+    loss = 0
+    for i in range (temp2.shape[0]):
+      loss += temp2[i]
+    
     loss /= N
     tmp = 0
     for i in range (W1.shape[0]):
@@ -139,7 +149,6 @@ class TwoLayerNet(object):
     for i in range (b2.shape[0]):
       tmp += b2[i] * b2[i]
     loss += reg * tmp
-
 
     #############################################################################
     #                              END OF YOUR CODE                             #
@@ -157,8 +166,14 @@ class TwoLayerNet(object):
     dSoft[range(N),y] = dSoft[range(N),y] - 1
     dSoft /= N  # Average over batch.
 
-    dW2 = np.dot(relu_1_activation.T, dSoft)
+    #dW2 = np.dot(relu_1_activation.T, dSoft)
     # 문제 3-1: 위 구문(line: 140)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
+    dW2 = np.zeros ([relu_1_activation.T.shape[0], dSoft.shape[1]])
+    for i in range (relu_1_activation.T.shape[0]):
+      for j in range (dSoft.shape[1]):
+        for k in range (dSoft.shape[0]):
+          dW2[i,j] += relu_1_activation.T[i,k] * dSoft[k,j]
+    
     dW2 += 2*reg*W2
     grads['W2'] = dW2
     
