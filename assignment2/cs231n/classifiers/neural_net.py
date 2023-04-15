@@ -329,8 +329,17 @@ class TwoLayerNet(object):
     # TODO: Implement this function; it should be VERY simple!                #
     ###########################################################################
 
-    y_pred = np.argmax(self.loss(X), axis=1)
+    #y_pred = np.argmax(self.loss(X), axis=1)
     # 문제 4: 위 구문(line: 275)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
+    y_pred = np.zeros ([self.loss(X).shape[0]], dtype=int)
+    for l in range (self.loss(X).shape[0]):
+      max_val = -10000
+      max_idx = 0
+      for m in range (self.loss(X).shape[1]):
+        if max_val < self.loss(X)[l][m]:
+          max_val = self.loss(X)[l][m]
+          max_idx = m
+      y_pred[l] = max_idx
 
     ###########################################################################
     #                              END OF YOUR CODE                           #
