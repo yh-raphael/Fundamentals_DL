@@ -149,7 +149,7 @@ class TwoLayerNet(object):
     for i in range (b2.shape[0]):
       tmp += b2[i] * b2[i]
     loss += reg * tmp
-
+    
     #############################################################################
     #                              END OF YOUR CODE                             #
     #############################################################################
@@ -178,22 +178,44 @@ class TwoLayerNet(object):
     grads['W2'] = dW2
     
     db2 = dSoft * 1
-    grads['b2'] = np.sum(db2, axis=0)
+    #grads['b2'] = np.sum(db2, axis=0)
     # 문제 3-2: 위 구문(line: 146)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
+    tmp = np.zeros ([db2.shape[1]])
+    for j in range (db2.shape[1]):
+      for i in range (db2.shape[0]):
+        tmp[j] += db2[i,j]
+    grads['b2'] = tmp
 
-    dx2 = np.dot(dSoft, W2.T)
+    #dx2 = np.dot(dSoft, W2.T)
     # 문제 3-3: 위 구문(line: 149)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
+    dx2 = np.zeros ([dSoft.shape[0], W2.T.shape[1]])
+    for i in range (dSoft.shape[0]):
+      for j in range (W2.T.shape[1]):
+        for k in range (W2.T.shape[0]):
+          dx2[i,j] += dSoft[i][k] * W2.T[k][j]
+
     relu_mask = (relu_1_activation > 0)
     dRelu1= relu_mask*dx2
 
-    dW1 = np.dot(X.T, dRelu1)
+    #dW1 = np.dot(X.T, dRelu1)
     # 문제 3-4: 위 구문(line: 154)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
+    dW1 = np.zeros ([X.T.shape[0], dRelu1.shape[1]])
+    for i in range (X.T.shape[0]):
+      for j in range (dRelu1.shape[1]):
+        for k in range (dRelu1.shape[0]):
+          dW1[i,j] += X.T[i][k] * dRelu1[k][j]
+
     dW1 += 2*reg*W1
     grads['W1'] = dW1
 
     db1 = dRelu1 * 1
-    grads['b1'] = np.sum(db1, axis=0)
+    #grads['b1'] = np.sum(db1, axis=0)
     # 문제 3-5: 위 구문(line: 160)을 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성
+    tmp7 = np.zeros ([db1.shape[1]])
+    for j in range (db1.shape[1]):
+      for i in range (db1.shape[0]):
+        tmp7[j] += db1[i,j]
+    grads['b1'] = tmp7
 
     #############################################################################
     #                              END OF YOUR CODE                             #
