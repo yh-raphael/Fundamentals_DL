@@ -18,3 +18,22 @@ $ conda create -n cs231n python=3.7
 $ pip install -r requirements.txt  
 
 귀신같이 됨..! scipy 깔리고 'data_utils.py' line 6 에서도 에러 안 남!  
+
+
+# Assignment 2
+
+Two layer network, feature 프로그램 작성  
+
+neural_net.py : TwoLayerNet class  
+feature.ipynb  
+two_layer_net.ipyb  
+
+## 과제 코드로 돌려보기
+
+feature.ipynb : 19626m 30.9s (327.1 시간)  
+two_layer_net.ipyb : 18593m 40.6s (309.9 시간)  
+
+이후에도 끝나지 않아서 중단 시킴..
+
+
+# Assignment 3
