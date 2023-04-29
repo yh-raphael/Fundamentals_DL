@@ -37,3 +37,12 @@ two_layer_net.ipyb : 18593m 40.6s (309.9 시간)
 
 
 # Assignment 3
+
+fc_net.py : Fully-Connected neural network - forward pass, backward pass  
+layers.py : Batch Normalization, Dropout  
+
+### Test files
+
+FullyConnectedNets.ipynb  
+BatchNormalization.ipynb  
+Dropout.ipynb  
