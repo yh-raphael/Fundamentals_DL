@@ -51,11 +51,21 @@ class TwoLayerNet(object):
         ## 문제 1. start block #############################################################################
         ## block 내의 코드를 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성 ##
         ## ( numpy.T, numpy.array함수만 사용 가능 )                                                       ##
-        self.params['W1'] = np.random.normal(0, weight_scale, [input_dim, hidden_dim])
-        self.params['b1'] = np.zeros([hidden_dim])
-        self.params['W2'] = np.random.normal(0, weight_scale, [hidden_dim, num_classes])
-        self.params['b2'] = np.zeros([num_classes])
+        #self.params['W1'] = np.random.normal(0, weight_scale, [input_dim, hidden_dim])
+        #self.params['b1'] = np.zeros([hidden_dim])
+        #self.params['W2'] = np.random.normal(0, weight_scale, [hidden_dim, num_classes])
+        #self.params['b2'] = np.zeros([num_classes])
         ## 문제 1. end block ###############################################################################
+
+        import random
+        W1 = [ [random.normalvariate (mu=0.0, sigma=weight_scale) for col in range(hidden_dim)] for row in range(input_dim) ]
+        b1 = [0.0 for col in range(hidden_dim)]
+        W2 = [ [random.normalvariate (mu=0.0, sigma=weight_scale) for col in range(num_classes)] for row in range(hidden_dim) ]
+        b2 = [0.0 for col in range(num_classes)]
+        self.params['W1'] = np.array (W1)
+        self.params['b1'] = np.array (b1)
+        self.params['W2'] = np.array (W2)
+        self.params['b2'] = np.array (b2)
 
         ############################################################################
         #                             END OF YOUR CODE                             #
