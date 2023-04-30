@@ -55,7 +55,6 @@ class TwoLayerNet(object):
         self.params['b1'] = np.zeros([hidden_dim])
         self.params['W2'] = np.random.normal(0, weight_scale, [hidden_dim, num_classes])
         self.params['b2'] = np.zeros([num_classes])
-        ## 문제 1. end block ###############################################################################
 
         # import random
         # W1 = [ [random.normalvariate (mu=0.0, sigma=weight_scale) for col in range(hidden_dim)] for row in range(input_dim) ]
@@ -66,6 +65,8 @@ class TwoLayerNet(object):
         # self.params['b1'] = np.array (b1)
         # self.params['W2'] = np.array (W2)
         # self.params['b2'] = np.array (b2)
+        
+        ## 문제 1. end block ###############################################################################
 
         ############################################################################
         #                             END OF YOUR CODE                             #
@@ -137,16 +138,16 @@ class TwoLayerNet(object):
         ## 문제 2. start block #############################################################################
         ## block 내의 코드를 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성 ##
         ## ( numpy.T, numpy.array함수만 사용 가능 )                                                       ##
-        #loss += 0.5*self.reg*(np.sum(np.square(self.params['W1'])) + np.sum(np.square(self.params['W2'])))
+        loss += 0.5*self.reg*(np.sum(np.square(self.params['W1'])) + np.sum(np.square(self.params['W2'])))
         
-        tmp = 0.0
-        for i in range (self.params['W1'].shape[0]):
-            for j in range (self.params['W1'].shape[1]):
-                tmp += self.params['W1'][i, j] * self.params['W1'][i, j]
-        for i in range (self.params['W2'].shape[0]):
-            for j in range (self.params['W2'].shape[1]):
-                tmp += self.params['W2'][i, j] * self.params['W2'][i, j]
-        loss += 0.5 * self.reg * tmp
+        # tmp = 0.0
+        # for i in range (self.params['W1'].shape[0]):
+        #     for j in range (self.params['W1'].shape[1]):
+        #         tmp += self.params['W1'][i, j] * self.params['W1'][i, j]
+        # for i in range (self.params['W2'].shape[0]):
+        #     for j in range (self.params['W2'].shape[1]):
+        #         tmp += self.params['W2'][i, j] * self.params['W2'][i, j]
+        # loss += 0.5 * self.reg * tmp
 
         ## 문제 2. end block ###############################################################################
 
@@ -229,15 +230,31 @@ class FullyConnectedNet(object):
         ## 문제 3. start block #############################################################################
         ## block 내의 코드를 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성 ##
         ## ( numpy.T, numpy.array함수만 사용 가능 )                                                       ##
-        for i in range(self.num_layers - 1):
-            self.params['W' + str(i+1)] = np.random.normal(0, weight_scale, [input_dim, hidden_dims[i]])
-            self.params['b' + str(i+1)] = np.zeros([hidden_dims[i]])
+        # for i in range(self.num_layers - 1):
+        #     self.params['W' + str(i+1)] = np.random.normal(0, weight_scale, [input_dim, hidden_dims[i]])
+        #     self.params['b' + str(i+1)] = np.zeros([hidden_dims[i]])
+
+        #     if self.use_batchnorm:
+        #         self.params['beta' + str(i+1)] = np.zeros([hidden_dims[i]])
+        #         self.params['gamma' + str(i+1)] = np.ones([hidden_dims[i]])
+
+        #     input_dim = hidden_dims[i]  # Set the input dim of next layer to be output dim of current layer.
+
+        import random
+        for i in range (self.num_layers - 1):
+            W_tmp = [ [random.normalvariate (mu=0.0, sigma=weight_scale) for col in range(hidden_dims[i])] for row in range(input_dim) ]
+            b_tmp = [0.0 for col in range(hidden_dims[i])]
+            self.params['W' + str(i+1)] = np.array (W_tmp)
+            self.params['b' + str(i+1)] = np.array (b_tmp)
 
             if self.use_batchnorm:
-                self.params['beta' + str(i+1)] = np.zeros([hidden_dims[i]])
-                self.params['gamma' + str(i+1)] = np.ones([hidden_dims[i]])
+                beta_tmp = [0.0 for col in range(hidden_dims[i])]
+                gamma_tmp = [1.0 for col in range(hidden_dims[i])]
+                self.params['beta' + str(i+1)] = np.array (beta_tmp)
+                self.params['gamma' + str(i+1)] = np.array (gamma_tmp)
 
             input_dim = hidden_dims[i]  # Set the input dim of next layer to be output dim of current layer.
+
         ## 문제 3. start block #############################################################################
 
             
