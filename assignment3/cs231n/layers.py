@@ -39,40 +39,43 @@ def affine_forward(x, w, b):
     out = np.dot(reshaped_input, w) + b
 
 
+    # print ("reshaped_input: ", reshaped_input[0:3][0:3])
+    # print ("out: ", out[0:3][0:3])
 
-    NN = x.shape[0]
+
+    # NN = x.shape[0]
     
 
-    import itertools
-    if x.ndim == 4:
-        xx = []
-        for i in range (x.shape[0]):
+    # import itertools
+    # if x.ndim == 4:
+    #     xx = []
+    #     for i in range (x.shape[0]):
 
-            tmp = []
-            for j in range (x.shape[1]):
-                tmp.append ( list (itertools.chain (*x[i][j])) )
-            tmp = np.array (tmp)
+    #         tmp = []
+    #         for j in range (x.shape[1]):
+    #             tmp.append ( list (itertools.chain (*x[i][j])) )
+    #         tmp = np.array (tmp)
             
-            xx.append ( list (itertools.chain (*tmp)) )
-        reshaped_input = np.array (xx)
+    #         xx.append ( list (itertools.chain (*tmp)) )
+    #     reshaped_input = np.array (xx)
 
-    elif x.ndim == 3:
-        tmp = []
-        for i in range (x.shape[0]):
-            tmp.append ( list (itertools.chain (*x[i])) )
-        reshaped_input = np.array (tmp)
+    # elif x.ndim == 3:
+    #     tmp = []
+    #     for i in range (x.shape[0]):
+    #         tmp.append ( list (itertools.chain (*x[i])) )
+    #     reshaped_input = np.array (tmp)
 
-    elif x.ndim == 2:
-        reshaped_input = x
+    # elif x.ndim == 2:
+    #     reshaped_input = x
 
 
-    tmp2 = [[0.0 for j in range (w.shape[1])] for i in range (reshaped_input.shape[0])]
-    out = np.array (tmp2)
-    for i in range (reshaped_input.shape[0]):
-        for j in range (w.shape[1]):
-            for k in range (w.shape[0]):
-                out[i][j] += reshaped_input[i][k] * w[k][j]
-    out = out + b
+    # tmp2 = [[0.0 for j in range (w.shape[1])] for i in range (reshaped_input.shape[0])]
+    # out = np.array (tmp2)
+    # for i in range (reshaped_input.shape[0]):
+    #     for j in range (w.shape[1]):
+    #         for k in range (w.shape[0]):
+    #             out[i][j] += reshaped_input[i][k] * w[k][j]
+    # out = out + b
 
     ## 문제 5. end block ###############################################################################
 
@@ -126,74 +129,74 @@ def affine_backward(dout, cache):
 
 
 
-    NN = x.shape[0]    
+    # NN = x.shape[0]    
 
 
 
-    import itertools
-    if x.ndim == 4:
-        xx = []
-        for i in range (x.shape[0]):
+    # import itertools
+    # if x.ndim == 4:
+    #     xx = []
+    #     for i in range (x.shape[0]):
 
-            tmp = []
-            for j in range (x.shape[1]):
-                tmp.append ( list (itertools.chain (*x[i][j])) )
-            tmp = np.array (tmp)
+    #         tmp = []
+    #         for j in range (x.shape[1]):
+    #             tmp.append ( list (itertools.chain (*x[i][j])) )
+    #         tmp = np.array (tmp)
             
-            xx.append ( list (itertools.chain (*tmp)) )
-        reshaped_x = np.array (xx)
+    #         xx.append ( list (itertools.chain (*tmp)) )
+    #     reshaped_x = np.array (xx)
 
-    elif x.ndim == 3:
-        tmp = []
-        for i in range (x.shape[0]):
-            tmp.append ( list (itertools.chain (*x[i])) )
-        reshaped_x = np.array (tmp)
+    # elif x.ndim == 3:
+    #     tmp = []
+    #     for i in range (x.shape[0]):
+    #         tmp.append ( list (itertools.chain (*x[i])) )
+    #     reshaped_x = np.array (tmp)
 
-    elif x.ndim == 2:
-        reshaped_x = x
+    # elif x.ndim == 2:
+    #     reshaped_x = x
 
 
 
-    tmp3 = [[0.0 for j in range (w.T.shape[1])] for i in range (dout.shape[0])]
-    dx = np.array (tmp3)
-    for i in range (dout.shape[0]):
-        for j in range (w.T.shape[1]):
-            for k in range (w.T.shape[0]):
-                dx[i][j] += dout[i][k] * w.T[k][j]
+    # tmp3 = [[0.0 for j in range (w.T.shape[1])] for i in range (dout.shape[0])]
+    # dx = np.array (tmp3)
+    # for i in range (dout.shape[0]):
+    #     for j in range (w.T.shape[1]):
+    #         for k in range (w.T.shape[0]):
+    #             dx[i][j] += dout[i][k] * w.T[k][j]
 
-    if x.ndim == 3:
-        xdim_2 = x.shape[1]
-        xdim_3 = x.shape[2]
+    # if x.ndim == 3:
+    #     xdim_2 = x.shape[1]
+    #     xdim_3 = x.shape[2]
 
-        dd = []
-        for i in range (NN):
-            walker = 0
-            tmp4 = [[0.0 for j in range (xdim_3)] for i in range (xdim_2)]
-            for j in range (xdim_2):
-                for k in range (xdim_3):
-                    tmp4[j][k] = dx[i][walker]
-                    walker += 1
-            dd.append (tmp4)
-        dx = np.array (dd)
+    #     dd = []
+    #     for i in range (NN):
+    #         walker = 0
+    #         tmp4 = [[0.0 for j in range (xdim_3)] for i in range (xdim_2)]
+    #         for j in range (xdim_2):
+    #             for k in range (xdim_3):
+    #                 tmp4[j][k] = dx[i][walker]
+    #                 walker += 1
+    #         dd.append (tmp4)
+    #     dx = np.array (dd)
     
 
 
-    tmp5 = [[0.0 for j in range (dout.shape[1])] for i in range (reshaped_x.T.shape[0])]
-    dw = np.array (tmp5)
-    for i in range (reshaped_x.T.shape[0]):
-        for j in range (dout.shape[1]):
-            for k in range (dout.shape[0]):
-                dw[i][j] += reshaped_x.T[i][k] * dout[k][j]
+    # tmp5 = [[0.0 for j in range (dout.shape[1])] for i in range (reshaped_x.T.shape[0])]
+    # dw = np.array (tmp5)
+    # for i in range (reshaped_x.T.shape[0]):
+    #     for j in range (dout.shape[1]):
+    #         for k in range (dout.shape[0]):
+    #             dw[i][j] += reshaped_x.T[i][k] * dout[k][j]
 
 
 
-    tmp6 = [0.0 for j in range (dout.shape[1])]
-    db = np.array (tmp6)
-    for j in range (dout.shape[1]):
-        tmp_sum = 0.0
-        for i in range (dout.shape[0]):
-            tmp_sum += dout[i][j]
-        db[j] = tmp_sum
+    # tmp6 = [0.0 for j in range (dout.shape[1])]
+    # db = np.array (tmp6)
+    # for j in range (dout.shape[1]):
+    #     tmp_sum = 0.0
+    #     for i in range (dout.shape[0]):
+    #         tmp_sum += dout[i][j]
+    #     db[j] = tmp_sum
 
     ## 문제 6. end block ###############################################################################
     
@@ -326,27 +329,71 @@ def batchnorm_forward(x, gamma, beta, bn_param):
         ## block 내의 코드를 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성 ##
         ## ( numpy.T, numpy.array함수만 사용 가능 )                                                       ##
         # Take sample mean & var of our minibatch across each dimension.
-        sample_mean = np.mean(x, axis=0)
-        sample_var = np.var(x, axis=0)
+        # sample_mean = np.mean(x, axis=0)
+        # sample_var = np.var(x, axis=0)
 
-        # Normalise our batch then shift and scale with gamma/beta.
-        normalized_data = (x - sample_mean) / np.sqrt(sample_var + eps)
+        # # Normalise our batch then shift and scale with gamma/beta.
+        # normalized_data = (x - sample_mean) / np.sqrt(sample_var + eps)
+        # out = gamma * normalized_data + beta
+
+        # # Update our running mean and variance then store.
+        # running_mean = momentum * running_mean + (1 - momentum) * sample_mean
+        # running_var = momentum * running_var + (1 - momentum) * sample_var
+        # bn_param['running_mean'] = running_mean
+        # bn_param['running_var'] = running_var
+
+        # # Store intermediate results needed for backward pass.
+        # cache = {
+        #     'x_minus_mean': (x - sample_mean),
+        #     'normalized_data': normalized_data,
+        #     'gamma': gamma,
+        #     'ivar': 1./np.sqrt(sample_var + eps),
+        #     'sqrtvar': np.sqrt(sample_var + eps),
+        # }
+
+
+
+        tmp = [0.0 for j in range (x.shape[1])]
+        sample_mean = np.array (tmp)
+        for j in range (x.shape[1]):
+            tmp_sum = 0.0
+            for i in range (x.shape[0]):
+                tmp_sum += x[i][j]
+            sample_mean[j] = tmp_sum / x.shape[0]
+
+        sample_var = np.array (tmp)
+        for j in range (x.shape[1]):
+            var_sum = 0
+            for i in range (x.shape[0]):
+                var_sum += (x[i][j] - sample_mean[j]) ** 2
+            sample_var[j] = var_sum / (x.shape[0])
+
+
+
+        tmp2 = [[0.0 for j in range (x.shape[1])] for i in range (x.shape[0])]
+        normalized_data = np.array (tmp2)
+        for i in range (x.shape[0]):
+            for j in range (x.shape[1]):
+                normalized_data[i][j] = (x[i][j] - sample_mean[j]) / ((sample_var[j] + eps) ** 0.5)
         out = gamma * normalized_data + beta
 
-        # Update our running mean and variance then store.
+
+
         running_mean = momentum * running_mean + (1 - momentum) * sample_mean
         running_var = momentum * running_var + (1 - momentum) * sample_var
         bn_param['running_mean'] = running_mean
         bn_param['running_var'] = running_var
 
-        # Store intermediate results needed for backward pass.
+
+
         cache = {
             'x_minus_mean': (x - sample_mean),
             'normalized_data': normalized_data,
             'gamma': gamma,
-            'ivar': 1./np.sqrt(sample_var + eps),
-            'sqrtvar': np.sqrt(sample_var + eps),
+            'ivar': 1. / ((sample_var + eps) ** 0.5),
+            'sqrtvar': ((sample_var + eps) ** 0.5),
         }
+
         ## 문제 7-1. end block #############################################################################
 
         #######################################################################
@@ -364,7 +411,11 @@ def batchnorm_forward(x, gamma, beta, bn_param):
         ## block 내의 코드를 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성 ##
         ## ( numpy.T, numpy.array함수만 사용 가능 )                                                       ##
         # Test time batch norm using learned gamma/beta and calculated running mean/var.
-        out = (gamma / (np.sqrt(running_var + eps)) * x) + (beta - (gamma*running_mean)/np.sqrt(running_var + eps))
+        #out = (gamma / (np.sqrt(running_var + eps)) * x) + (beta - (gamma*running_mean)/np.sqrt(running_var + eps))
+
+        
+        out = (gamma / ((running_var + eps) ** 0.5) * x) + (beta - (gamma*running_mean) / ((running_var + eps) ** 0.5))
+
         ## 문제 7-2. end block #############################################################################
 
         #######################################################################
