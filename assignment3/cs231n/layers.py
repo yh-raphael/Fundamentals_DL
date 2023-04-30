@@ -458,42 +458,6 @@ def batchnorm_backward(dout, cache):
     ## block 내의 코드를 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성 ##
     ## ( numpy.T, numpy.array함수만 사용 가능 )                                                       ##
     # Get cached results from the forward pass.
-    # N, D = dout.shape
-    # normalized_data = cache.get('normalized_data')
-    # gamma = cache.get('gamma')
-    # ivar = cache.get('ivar')
-    # x_minus_mean = cache.get('x_minus_mean')
-    # sqrtvar = cache.get('sqrtvar')
-
-    # # Backprop dout to calculate dbeta and dgamma.
-    # dbeta = np.sum(dout, axis=0)
-    # dgamma = np.sum(dout * normalized_data, axis=0)
-
-    # # Carry on the backprop in steps to calculate dx.
-    # # Step1
-    # dxhat = dout*gamma
-    # # Step2
-    # dxmu1 = dxhat*ivar
-    # # Step3
-    # divar = np.sum(dxhat*x_minus_mean, axis=0)
-    # # Step4
-    # dsqrtvar = divar * (-1/sqrtvar**2)
-    # # Step5
-    # dvar = dsqrtvar * 0.5 * (1/sqrtvar)
-    # # Step6
-    # dsq = (1/N)*dvar*np.ones_like(dout)
-    # # Step7
-    # dxmu2 = dsq * 2 * x_minus_mean
-    # # Step8
-    # dx1 = dxmu1 + dxmu2
-    # dmu = -1*np.sum(dxmu1 + dxmu2, axis=0)
-    # # Step9
-    # dx2 = (1/N)*dmu*np.ones_like(dout)
-    # # Step10
-    # dx = dx2 + dx1
-
-
-
     N, D = dout.shape
     normalized_data = cache.get('normalized_data')
     gamma = cache.get('gamma')
@@ -501,52 +465,88 @@ def batchnorm_backward(dout, cache):
     x_minus_mean = cache.get('x_minus_mean')
     sqrtvar = cache.get('sqrtvar')
 
+    # Backprop dout to calculate dbeta and dgamma.
+    dbeta = np.sum(dout, axis=0)
+    dgamma = np.sum(dout * normalized_data, axis=0)
 
-
-    tmp = [0.0 for j in range (dout.shape[1])]
-    dbeta = np.array (tmp)
-    for j in range (dout.shape[1]):
-        for i in range (dout.shape[0]):
-            dbeta[j] += dout[i][j]
-    
-    dgamma = np.array (tmp)
-    for j in range (dout.shape[1]):
-        for i in range (dout.shape[0]):
-            dgamma[j] += dout[i][j] * normalized_data[i][j]
-
-
-
+    # Carry on the backprop in steps to calculate dx.
     # Step1
     dxhat = dout*gamma
     # Step2
     dxmu1 = dxhat*ivar
     # Step3
-    tmp2 = [0.0 for j in range (dxhat.shape[1])]
-    divar = np.array (tmp2)
-    for j in range (dxhat.shape[1]):
-        for i in range (dxhat.shape[0]):
-            divar[j] += dxhat[i][j] * x_minus_mean[i][j]
+    divar = np.sum(dxhat*x_minus_mean, axis=0)
     # Step4
     dsqrtvar = divar * (-1/sqrtvar**2)
     # Step5
     dvar = dsqrtvar * 0.5 * (1/sqrtvar)
     # Step6
-    tmp3 = [[1.0 for j in range(dout.shape[1])] for i in range(dout.shape[0])]
-    dsq = (1/N) * dvar * np.array (tmp3)
+    dsq = (1/N)*dvar*np.ones_like(dout)
     # Step7
     dxmu2 = dsq * 2 * x_minus_mean
     # Step8
     dx1 = dxmu1 + dxmu2
-    tmp4 = [0.0 for j in range (dxmu1.shape[1])]
-    dmu = np.array (tmp4)
-    for j in range (dxmu1.shape[1]):
-        for i in range (dxmu1.shape[0]):
-            dmu[j] += -1 * (dxmu1[i][j] + dxmu2[i][j])
+    dmu = -1*np.sum(dxmu1 + dxmu2, axis=0)
     # Step9
-    tmp5 = [[1.0 for j in range(dout.shape[1])] for i in range(dout.shape[0])]
-    dx2 = (1/N) * dmu * np.array (tmp5)
+    dx2 = (1/N)*dmu*np.ones_like(dout)
     # Step10
     dx = dx2 + dx1
+
+
+
+    # N, D = dout.shape
+    # normalized_data = cache.get('normalized_data')
+    # gamma = cache.get('gamma')
+    # ivar = cache.get('ivar')
+    # x_minus_mean = cache.get('x_minus_mean')
+    # sqrtvar = cache.get('sqrtvar')
+
+
+
+    # tmp = [0.0 for j in range (dout.shape[1])]
+    # dbeta = np.array (tmp)
+    # for j in range (dout.shape[1]):
+    #     for i in range (dout.shape[0]):
+    #         dbeta[j] += dout[i][j]
+    
+    # dgamma = np.array (tmp)
+    # for j in range (dout.shape[1]):
+    #     for i in range (dout.shape[0]):
+    #         dgamma[j] += dout[i][j] * normalized_data[i][j]
+
+
+
+    # # Step1
+    # dxhat = dout*gamma
+    # # Step2
+    # dxmu1 = dxhat*ivar
+    # # Step3
+    # tmp2 = [0.0 for j in range (dxhat.shape[1])]
+    # divar = np.array (tmp2)
+    # for j in range (dxhat.shape[1]):
+    #     for i in range (dxhat.shape[0]):
+    #         divar[j] += dxhat[i][j] * x_minus_mean[i][j]
+    # # Step4
+    # dsqrtvar = divar * (-1/sqrtvar**2)
+    # # Step5
+    # dvar = dsqrtvar * 0.5 * (1/sqrtvar)
+    # # Step6
+    # tmp3 = [[1.0 for j in range(dout.shape[1])] for i in range(dout.shape[0])]
+    # dsq = (1/N) * dvar * np.array (tmp3)
+    # # Step7
+    # dxmu2 = dsq * 2 * x_minus_mean
+    # # Step8
+    # dx1 = dxmu1 + dxmu2
+    # tmp4 = [0.0 for j in range (dxmu1.shape[1])]
+    # dmu = np.array (tmp4)
+    # for j in range (dxmu1.shape[1]):
+    #     for i in range (dxmu1.shape[0]):
+    #         dmu[j] += -1 * (dxmu1[i][j] + dxmu2[i][j])
+    # # Step9
+    # tmp5 = [[1.0 for j in range(dout.shape[1])] for i in range(dout.shape[0])]
+    # dx2 = (1/N) * dmu * np.array (tmp5)
+    # # Step10
+    # dx = dx2 + dx1
 
     ## 문제 8. end block ###############################################################################
     
@@ -592,11 +592,43 @@ def batchnorm_backward_alt(dout, cache):
     ## 문제 9. start block #############################################################################
     ## block 내의 코드를 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성 ##
     ## ( numpy.T, numpy.array함수만 사용 가능 )                                                       ##
-    dbeta = np.sum(dout, axis=0)
-    dgamma = np.sum(dout * normalized_data, axis=0)
+    #dbeta = np.sum(dout, axis=0)
+    #dgamma = np.sum(dout * normalized_data, axis=0)
+
+    
+    tmp = [0.0 for j in range (dout.shape[1])]
+    dbeta = np.array (tmp)
+    for j in range (dout.shape[1]):
+        for i in range (dout.shape[0]):
+            dbeta[j] += dout[i][j]
+    
+    dgamma = np.array (tmp)
+    for j in range (dout.shape[1]):
+        for i in range (dout.shape[0]):
+            dgamma[j] += dout[i][j] * normalized_data[i][j]
+
 
     # Alternative faster formula way of calculating dx. ref: http://cthorey.github.io./backpropagation/
-    dx =(1 / N) * gamma * 1/sqrtvar * ((N * dout) - np.sum(dout, axis=0) - (x_minus_mean) * np.square(ivar) * np.sum(dout * (x_minus_mean), axis=0))
+    #dx =(1 / N) * gamma * 1/sqrtvar * ((N * dout) - np.sum(dout, axis=0) - (x_minus_mean) * np.square(ivar) * np.sum(dout * (x_minus_mean), axis=0))
+
+
+    tmp2 = [0.0 for j in range (dout.shape[1])]
+    dout_sum = np.array (tmp2)
+    for j in range (dout.shape[1]):
+        for i in range (dout.shape[0]):
+            dout_sum[j] += dout[i][j]
+
+    ivar_sqr = ivar ** 2
+
+    tmp3 = dout * (x_minus_mean)
+    tmp2 = [0.0 for j in range (dout.shape[1])]
+    dout_xminus_sum = np.array (tmp2)
+    for j in range (dout.shape[1]):
+        for i in range (dout.shape[0]):
+            dout_xminus_sum[j] += tmp3[i][j]
+
+    dx =(1 / N) * gamma * 1/sqrtvar * ((N * dout) - dout_sum - (x_minus_mean) * ivar_sqr * dout_xminus_sum)
+
     ## 문제 9. end block ###############################################################################
     
     
