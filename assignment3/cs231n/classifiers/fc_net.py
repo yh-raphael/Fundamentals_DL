@@ -376,13 +376,13 @@ class FullyConnectedNet(object):
         ## 문제 4-1. start block ###########################################################################
         ## block 내의 코드를 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성 ##
         ## ( numpy.T, numpy.array함수만 사용 가능 )                                                       ##
-        #loss += 0.5*self.reg*(np.sum(np.square(self.params['W'+str(self.num_layers)])))
+        loss += 0.5*self.reg*(np.sum(np.square(self.params['W'+str(self.num_layers)])))
         
-        tmp2 = 0.0
-        for i in range (self.params['W'+str(self.num_layers)].shape[0]):
-            for j in range (self.params['W'+str(self.num_layers)].shape[1]):
-                tmp2 += self.params['W'+str(self.num_layers)][i, j] ** 2
-        loss += 0.5 * self.reg * tmp2
+        # tmp2 = 0.0
+        # for i in range (self.params['W'+str(self.num_layers)].shape[0]):
+        #     for j in range (self.params['W'+str(self.num_layers)].shape[1]):
+        #         tmp2 += self.params['W'+str(self.num_layers)][i, j] ** 2
+        # loss += 0.5 * self.reg * tmp2
 
         ## 문제 4-1. end block #############################################################################
         
@@ -418,13 +418,13 @@ class FullyConnectedNet(object):
             ## 문제 4-1. start block ###########################################################################
             ## block 내의 코드를 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성 ##
             ## ( numpy.T, numpy.array함수만 사용 가능 )                                                       ##
-            #loss += 0.5 * self.reg * (np.sum(np.square(self.params['W' + str(i)])))
+            loss += 0.5 * self.reg * (np.sum(np.square(self.params['W' + str(i)])))
 
-            tmp3 = 0.0
-            for row in range (self.params['W' + str(i)].shape[0]):
-                for col in range (self.params['W' + str(i)].shape[1]):
-                    tmp3 += self.params['W' + str(i)][row, col] ** 2
-            loss += 0.5 * self.reg * tmp3
+            # tmp3 = 0.0
+            # for row in range (self.params['W' + str(i)].shape[0]):
+            #     for col in range (self.params['W' + str(i)].shape[1]):
+            #         tmp3 += self.params['W' + str(i)][row, col] ** 2
+            # loss += 0.5 * self.reg * tmp3
 
             ## 문제 4-1. end block #############################################################################
 

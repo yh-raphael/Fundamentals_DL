@@ -37,6 +37,51 @@ def affine_forward(x, w, b):
 
     # FC layer forward pass.
     out = np.dot(reshaped_input, w) + b
+
+
+    # print ("x.size: ", x.size)
+    # print ("NN: ", NN)
+    # print ("x.ndim: ", x.ndim)
+    # print ("x.shape : ", x.shape)
+    # print ("w.shape: ", w.shape)
+    # print ("out.shape: ",out.shape)
+    # print ("b.shape: ",b.shape)    
+    
+    # print ("reshaped_input: ", reshaped_input[0:4, 0:5])
+    # print ("reshaped_input.shape: ", reshaped_input.shape)
+
+    NN = x.shape[0]
+    
+    import itertools
+    if x.ndim == 4:
+        xx = []
+        for i in range (x.shape[0]):
+
+            tmp = []
+            for j in range (x.shape[1]):
+                tmp.append ( list (itertools.chain (*x[i][j])) )
+            tmp = np.array (tmp)
+            
+            xx.append ( list (itertools.chain (*tmp)) )
+        reshaped_input = np.array (xx)
+
+    elif x.ndim == 3:
+        tmp = []
+        for i in range (x.shape[0]):
+            tmp.append ( list (itertools.chain (*x[i])) )
+        reshaped_input = np.array (tmp)
+
+    elif x.ndim == 2:
+        reshaped_input = x
+
+    tmp2 = [[0.0 for j in range (w.shape[1])] for i in range (reshaped_input.shape[0])]
+    out = np.array (tmp2)
+    for i in range (reshaped_input.shape[0]):
+        for j in range (w.shape[1]):
+            for k in range (w.shape[0]):
+                out[i][j] += reshaped_input[i][k] * w[k][j]
+    out = out + b
+
     ## 문제 5. end block ###############################################################################
 
     
