@@ -592,42 +592,42 @@ def batchnorm_backward_alt(dout, cache):
     ## 문제 9. start block #############################################################################
     ## block 내의 코드를 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성 ##
     ## ( numpy.T, numpy.array함수만 사용 가능 )                                                       ##
-    #dbeta = np.sum(dout, axis=0)
-    #dgamma = np.sum(dout * normalized_data, axis=0)
+    dbeta = np.sum(dout, axis=0)
+    dgamma = np.sum(dout * normalized_data, axis=0)
 
     
-    tmp = [0.0 for j in range (dout.shape[1])]
-    dbeta = np.array (tmp)
-    for j in range (dout.shape[1]):
-        for i in range (dout.shape[0]):
-            dbeta[j] += dout[i][j]
+    # tmp = [0.0 for j in range (dout.shape[1])]
+    # dbeta = np.array (tmp)
+    # for j in range (dout.shape[1]):
+    #     for i in range (dout.shape[0]):
+    #         dbeta[j] += dout[i][j]
     
-    dgamma = np.array (tmp)
-    for j in range (dout.shape[1]):
-        for i in range (dout.shape[0]):
-            dgamma[j] += dout[i][j] * normalized_data[i][j]
+    # dgamma = np.array (tmp)
+    # for j in range (dout.shape[1]):
+    #     for i in range (dout.shape[0]):
+    #         dgamma[j] += dout[i][j] * normalized_data[i][j]
 
 
     # Alternative faster formula way of calculating dx. ref: http://cthorey.github.io./backpropagation/
-    #dx =(1 / N) * gamma * 1/sqrtvar * ((N * dout) - np.sum(dout, axis=0) - (x_minus_mean) * np.square(ivar) * np.sum(dout * (x_minus_mean), axis=0))
+    dx =(1 / N) * gamma * 1/sqrtvar * ((N * dout) - np.sum(dout, axis=0) - (x_minus_mean) * np.square(ivar) * np.sum(dout * (x_minus_mean), axis=0))
 
 
-    tmp2 = [0.0 for j in range (dout.shape[1])]
-    dout_sum = np.array (tmp2)
-    for j in range (dout.shape[1]):
-        for i in range (dout.shape[0]):
-            dout_sum[j] += dout[i][j]
+    # tmp2 = [0.0 for j in range (dout.shape[1])]
+    # dout_sum = np.array (tmp2)
+    # for j in range (dout.shape[1]):
+    #     for i in range (dout.shape[0]):
+    #         dout_sum[j] += dout[i][j]
 
-    ivar_sqr = ivar ** 2
+    # ivar_sqr = ivar ** 2
 
-    tmp3 = dout * (x_minus_mean)
-    tmp2 = [0.0 for j in range (dout.shape[1])]
-    dout_xminus_sum = np.array (tmp2)
-    for j in range (dout.shape[1]):
-        for i in range (dout.shape[0]):
-            dout_xminus_sum[j] += tmp3[i][j]
+    # tmp3 = dout * (x_minus_mean)
+    # tmp2 = [0.0 for j in range (dout.shape[1])]
+    # dout_xminus_sum = np.array (tmp2)
+    # for j in range (dout.shape[1]):
+    #     for i in range (dout.shape[0]):
+    #         dout_xminus_sum[j] += tmp3[i][j]
 
-    dx =(1 / N) * gamma * 1/sqrtvar * ((N * dout) - dout_sum - (x_minus_mean) * ivar_sqr * dout_xminus_sum)
+    # dx =(1 / N) * gamma * 1/sqrtvar * ((N * dout) - dout_sum - (x_minus_mean) * ivar_sqr * dout_xminus_sum)
 
     ## 문제 9. end block ###############################################################################
     
@@ -677,7 +677,18 @@ def dropout_forward(x, dropout_param):
         ## block 내의 코드를 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성 ##
         ## ( numpy.T, numpy.array함수만 사용 가능 )                                                       ##
         # During training randomly drop out neurons with probability P, here we create the mask that does this.
-        mask = (np.random.random_sample(x.shape) >= p)
+        #mask = (np.random.random_sample(x.shape) >= p)
+
+        import random
+        random.seed ()
+
+        tmp = [[0.0 for j in range (x.shape[1])] for i in range (x.shape[0])]
+        tmp = np.array (tmp)
+        for i in range (x.shape[0]):
+            for j in range (x.shape[1]):
+                tmp[i][j] = random.random ()
+        mask = (tmp >= p)
+        
         ## 문제 10. end block ##############################################################################
 
         # Inverted dropout scales the remaining neurons during training so we don't have to at test time.
