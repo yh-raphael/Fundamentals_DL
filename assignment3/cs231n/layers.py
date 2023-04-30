@@ -112,91 +112,108 @@ def affine_backward(dout, cache):
     ## block 내의 코드를 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성 ##
     ## ( numpy.T, numpy.array함수만 사용 가능 )                                                       ##
     # Number of images in the batch.
-    NN = x.shape[0]
+    #NN = x.shape[0]
 
     # Reshape each input in our batch to a vector.
-    reshaped_x = np.reshape(x,[NN, -1])
+    #reshaped_x = np.reshape(x,[NN, -1])
 
     # Calculate dx = w*dout - remember to reshape back to shape of x.
-    dx = np.dot(dout, w.T)
-    dx = np.reshape(dx, x.shape)
+    #dx = np.dot(dout, w.T)
+    #dx = np.reshape(dx, x.shape)
 
     # Calculate dw = x*dout
-    dw = np.dot(reshaped_x.T,dout)
+    #dw = np.dot(reshaped_x.T,dout)
 
     # Calculate db = dout
-    db = np.sum(dout, axis=0)
+    #db = np.sum(dout, axis=0)
 
 
 
-    # NN = x.shape[0]    
+    NN = x.shape[0]    
 
 
 
-    # import itertools
-    # if x.ndim == 4:
-    #     xx = []
-    #     for i in range (x.shape[0]):
+    import itertools
+    if x.ndim == 4:
+        xx = []
+        for i in range (x.shape[0]):
 
-    #         tmp = []
-    #         for j in range (x.shape[1]):
-    #             tmp.append ( list (itertools.chain (*x[i][j])) )
-    #         tmp = np.array (tmp)
+            tmp = []
+            for j in range (x.shape[1]):
+                tmp.append ( list (itertools.chain (*x[i][j])) )
+            tmp = np.array (tmp)
             
-    #         xx.append ( list (itertools.chain (*tmp)) )
-    #     reshaped_x = np.array (xx)
+            xx.append ( list (itertools.chain (*tmp)) )
+        reshaped_x = np.array (xx)
 
-    # elif x.ndim == 3:
-    #     tmp = []
-    #     for i in range (x.shape[0]):
-    #         tmp.append ( list (itertools.chain (*x[i])) )
-    #     reshaped_x = np.array (tmp)
+    elif x.ndim == 3:
+        tmp = []
+        for i in range (x.shape[0]):
+            tmp.append ( list (itertools.chain (*x[i])) )
+        reshaped_x = np.array (tmp)
 
-    # elif x.ndim == 2:
-    #     reshaped_x = x
+    elif x.ndim == 2:
+        reshaped_x = x
 
 
 
-    # tmp3 = [[0.0 for j in range (w.T.shape[1])] for i in range (dout.shape[0])]
-    # dx = np.array (tmp3)
-    # for i in range (dout.shape[0]):
-    #     for j in range (w.T.shape[1]):
-    #         for k in range (w.T.shape[0]):
-    #             dx[i][j] += dout[i][k] * w.T[k][j]
+    tmp3 = [[0.0 for j in range (w.T.shape[1])] for i in range (dout.shape[0])]
+    dx = np.array (tmp3)
+    for i in range (dout.shape[0]):
+        for j in range (w.T.shape[1]):
+            for k in range (w.T.shape[0]):
+                dx[i][j] += dout[i][k] * w.T[k][j]
 
-    # if x.ndim == 3:
-    #     xdim_2 = x.shape[1]
-    #     xdim_3 = x.shape[2]
+    if x.ndim == 4:
+        xdim_2 = x.shape[1]
+        xdim_3 = x.shape[2]
+        xdim_4 = x.shape[3]
+    
+        ddd = []
+        for i in range (NN):
+            walker = 0
+            tmp4 = [[ [0.0 for k in range (xdim_4)] for j in range (xdim_3)] for i in range (xdim_2)]
+            for j in range (xdim_2):
+                for k in range (xdim_3):
+                    for m in range (xdim_4):
+                        tmp4[j][k][m] = dx[i][walker]
+                        walker += 1
+            ddd.append (tmp4)
+        dx = np.array (ddd)
 
-    #     dd = []
-    #     for i in range (NN):
-    #         walker = 0
-    #         tmp4 = [[0.0 for j in range (xdim_3)] for i in range (xdim_2)]
-    #         for j in range (xdim_2):
-    #             for k in range (xdim_3):
-    #                 tmp4[j][k] = dx[i][walker]
-    #                 walker += 1
-    #         dd.append (tmp4)
-    #     dx = np.array (dd)
+    if x.ndim == 3:
+        xdim_2 = x.shape[1]
+        xdim_3 = x.shape[2]
+
+        dd = []
+        for i in range (NN):
+            walker = 0
+            tmp4 = [[0.0 for j in range (xdim_3)] for i in range (xdim_2)]
+            for j in range (xdim_2):
+                for k in range (xdim_3):
+                    tmp4[j][k] = dx[i][walker]
+                    walker += 1
+            dd.append (tmp4)
+        dx = np.array (dd)
     
 
 
-    # tmp5 = [[0.0 for j in range (dout.shape[1])] for i in range (reshaped_x.T.shape[0])]
-    # dw = np.array (tmp5)
-    # for i in range (reshaped_x.T.shape[0]):
-    #     for j in range (dout.shape[1]):
-    #         for k in range (dout.shape[0]):
-    #             dw[i][j] += reshaped_x.T[i][k] * dout[k][j]
+    tmp5 = [[0.0 for j in range (dout.shape[1])] for i in range (reshaped_x.T.shape[0])]
+    dw = np.array (tmp5)
+    for i in range (reshaped_x.T.shape[0]):
+        for j in range (dout.shape[1]):
+            for k in range (dout.shape[0]):
+                dw[i][j] += reshaped_x.T[i][k] * dout[k][j]
 
 
 
-    # tmp6 = [0.0 for j in range (dout.shape[1])]
-    # db = np.array (tmp6)
-    # for j in range (dout.shape[1]):
-    #     tmp_sum = 0.0
-    #     for i in range (dout.shape[0]):
-    #         tmp_sum += dout[i][j]
-    #     db[j] = tmp_sum
+    tmp6 = [0.0 for j in range (dout.shape[1])]
+    db = np.array (tmp6)
+    for j in range (dout.shape[1]):
+        tmp_sum = 0.0
+        for i in range (dout.shape[0]):
+            tmp_sum += dout[i][j]
+        db[j] = tmp_sum
 
     ## 문제 6. end block ###############################################################################
     
