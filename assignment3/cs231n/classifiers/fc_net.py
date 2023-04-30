@@ -65,7 +65,7 @@ class TwoLayerNet(object):
         # self.params['b1'] = np.array (b1)
         # self.params['W2'] = np.array (W2)
         # self.params['b2'] = np.array (b2)
-        
+
         ## 문제 1. end block ###############################################################################
 
         ############################################################################
@@ -230,30 +230,30 @@ class FullyConnectedNet(object):
         ## 문제 3. start block #############################################################################
         ## block 내의 코드를 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성 ##
         ## ( numpy.T, numpy.array함수만 사용 가능 )                                                       ##
-        # for i in range(self.num_layers - 1):
-        #     self.params['W' + str(i+1)] = np.random.normal(0, weight_scale, [input_dim, hidden_dims[i]])
-        #     self.params['b' + str(i+1)] = np.zeros([hidden_dims[i]])
-
-        #     if self.use_batchnorm:
-        #         self.params['beta' + str(i+1)] = np.zeros([hidden_dims[i]])
-        #         self.params['gamma' + str(i+1)] = np.ones([hidden_dims[i]])
-
-        #     input_dim = hidden_dims[i]  # Set the input dim of next layer to be output dim of current layer.
-
-        import random
-        for i in range (self.num_layers - 1):
-            W_tmp = [ [random.normalvariate (mu=0.0, sigma=weight_scale) for col in range(hidden_dims[i])] for row in range(input_dim) ]
-            b_tmp = [0.0 for col in range(hidden_dims[i])]
-            self.params['W' + str(i+1)] = np.array (W_tmp)
-            self.params['b' + str(i+1)] = np.array (b_tmp)
+        for i in range(self.num_layers - 1):
+            self.params['W' + str(i+1)] = np.random.normal(0, weight_scale, [input_dim, hidden_dims[i]])
+            self.params['b' + str(i+1)] = np.zeros([hidden_dims[i]])
 
             if self.use_batchnorm:
-                beta_tmp = [0.0 for col in range(hidden_dims[i])]
-                gamma_tmp = [1.0 for col in range(hidden_dims[i])]
-                self.params['beta' + str(i+1)] = np.array (beta_tmp)
-                self.params['gamma' + str(i+1)] = np.array (gamma_tmp)
+                self.params['beta' + str(i+1)] = np.zeros([hidden_dims[i]])
+                self.params['gamma' + str(i+1)] = np.ones([hidden_dims[i]])
 
             input_dim = hidden_dims[i]  # Set the input dim of next layer to be output dim of current layer.
+
+        # import random
+        # for i in range (self.num_layers - 1):
+        #     W_tmp = [ [random.normalvariate (mu=0.0, sigma=weight_scale) for col in range(hidden_dims[i])] for row in range(input_dim) ]
+        #     b_tmp = [0.0 for col in range(hidden_dims[i])]
+        #     self.params['W' + str(i+1)] = np.array (W_tmp)
+        #     self.params['b' + str(i+1)] = np.array (b_tmp)
+
+        #     if self.use_batchnorm:
+        #         beta_tmp = [0.0 for col in range(hidden_dims[i])]
+        #         gamma_tmp = [1.0 for col in range(hidden_dims[i])]
+        #         self.params['beta' + str(i+1)] = np.array (beta_tmp)
+        #         self.params['gamma' + str(i+1)] = np.array (gamma_tmp)
+
+        #     input_dim = hidden_dims[i]  # Set the input dim of next layer to be output dim of current layer.
 
         ## 문제 3. start block #############################################################################
 
@@ -376,7 +376,14 @@ class FullyConnectedNet(object):
         ## 문제 4-1. start block ###########################################################################
         ## block 내의 코드를 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성 ##
         ## ( numpy.T, numpy.array함수만 사용 가능 )                                                       ##
-        loss += 0.5*self.reg*(np.sum(np.square(self.params['W'+str(self.num_layers)])))
+        #loss += 0.5*self.reg*(np.sum(np.square(self.params['W'+str(self.num_layers)])))
+        
+        tmp2 = 0.0
+        for i in range (self.params['W'+str(self.num_layers)].shape[0]):
+            for j in range (self.params['W'+str(self.num_layers)].shape[1]):
+                tmp2 += self.params['W'+str(self.num_layers)][i, j] ** 2
+        loss += 0.5 * self.reg * tmp2
+
         ## 문제 4-1. end block #############################################################################
         
         # Backprop dsoft to the last FC layer to calculate gradients.
@@ -411,7 +418,14 @@ class FullyConnectedNet(object):
             ## 문제 4-1. start block ###########################################################################
             ## block 내의 코드를 numpy lib를 사용하지 않고 numpy lib를 사용한 결과와 동일하게 동작하도록 작성 ##
             ## ( numpy.T, numpy.array함수만 사용 가능 )                                                       ##
-            loss += 0.5 * self.reg * (np.sum(np.square(self.params['W' + str(i)])))
+            #loss += 0.5 * self.reg * (np.sum(np.square(self.params['W' + str(i)])))
+
+            tmp3 = 0.0
+            for row in range (self.params['W' + str(i)].shape[0]):
+                for col in range (self.params['W' + str(i)].shape[1]):
+                    tmp3 += self.params['W' + str(i)][row, col] ** 2
+            loss += 0.5 * self.reg * tmp3
+
             ## 문제 4-1. end block #############################################################################
 
 
