@@ -38,6 +38,8 @@ two_layer_net.ipyb : 18593m 40.6s (309.9 시간)
 
 # Assignment 3
 
+Fully-connected Neural Network, Batch Normalization, Dropout  
+
 fc_net.py : Fully-Connected neural network - forward pass, backward pass  
 layers.py : Batch Normalization, Dropout  
 
@@ -46,3 +48,18 @@ layers.py : Batch Normalization, Dropout
 FullyConnectedNets.ipynb  
 BatchNormalization.ipynb  
 Dropout.ipynb  
+
+## 과제 코드로 돌려보기
+
+FullyConnectedNets.ipynb :  
+BatchNormalization.ipynb :  
+Dropout.ipynb :  
+
+
+# Assignment 4
+
+Pytorch, Tensorflow Tutorial with CIFAR-10  
+
+PyTorch.ipynb    : 3-layer ConvNet 구성, CIFAR-10 dataset 이용해 모델 train, evaluate.  
+TensorFlow.ipynb : 3-layer ConvNet 구성, CIFAR-10 dataset 이용해 모델 train, evaluate.  
+
