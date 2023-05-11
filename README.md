@@ -51,9 +51,9 @@ Dropout.ipynb
 
 ## 과제 코드로 돌려보기
 
-FullyConnectedNets.ipynb :  
-BatchNormalization.ipynb :  
-Dropout.ipynb :  
+FullyConnectedNets.ipynb : 10일 정도 걸림..  
+BatchNormalization.ipynb : 5일 정도  
+Dropout.ipynb            : 5일 정도  
 
 
 # Assignment 4
