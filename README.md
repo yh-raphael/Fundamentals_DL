@@ -63,3 +63,9 @@ Pytorch, Tensorflow Tutorial with CIFAR-10
 PyTorch.ipynb    : 3-layer ConvNet 구성, CIFAR-10 dataset 이용해 모델 train, evaluate.  
 TensorFlow.ipynb : 3-layer ConvNet 구성, CIFAR-10 dataset 이용해 모델 train, evaluate.  
 
+
+# Term Project
+
+PyTorch, pose estimation project  
+Transfer Learning  
+Data Augmentation  
